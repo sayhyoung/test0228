@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DALL·E 이미지 생성기</title>
+    <title>DALL·E 3 이미지 생성기</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,8 +27,8 @@
     </style>
 </head>
 <body>
-    <h1>DALL·E 이미지 생성기</h1>
-    <input type="text" id="prompt" placeholder="그릴 내용을 입력하세요">
+    <h1>DALL·E 3 이미지 생성기</h1>
+    <input type="text" id="prompt" placeholder="그릴 내용을 입력하세요. 예) a white siamese cat">
     <button onclick="generateImage()">이미지 생성</button>
     <div id="output"></div>
 
@@ -46,11 +46,17 @@
                     },
                     body: JSON.stringify({ prompt: prompt })
                 });
-                
+
+                // 응답을 JSON 형태로 파싱
                 const data = await response.json();
+
+                // 에러 처리
                 if (data.error) {
-                    outputDiv.innerHTML = `오류 발생: ${data.error.message}`;
+                    outputDiv.innerHTML = `오류 발생: ${data.error}`;
+                } else if (!data.data) {
+                    outputDiv.innerHTML = "알 수 없는 오류가 발생했습니다. data 필드가 없습니다.";
                 } else {
+                    // DALL·E 이미지 URL
                     const imageUrl = data.data[0].url;
                     outputDiv.innerHTML = `<img src="${imageUrl}" alt="생성된 이미지">`;
                 }
